@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinit Chaurasia | AI Systems & Full-Stack Developer Portfolio</title>
+  <meta name="description" content="Portfolio of Vinit Chaurasia — AI Systems Engineer, Full-Stack Developer, and Hackathon Builder showcasing GitHub Copilot prompt architectures and interactive CYOA game.">
+  <meta name="author" content="Vinit Chaurasia">
+  
+  <!-- Google Fonts: Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="ambient-glow glow-3" aria-hidden="true"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" id="brand-logo">
+        <span class="logo-accent">VC</span><span class="logo-dot">.</span><span class="logo-tag">dev</span>
+      </a>
+      
+      <nav class="nav-links" id="nav-links" aria-label="Main Navigation">
+        <a href="#about" class="nav-item">About</a>
+        <a href="#skills" class="nav-item">Skills</a>
+        <a href="#projects" class="nav-item">Projects</a>
+        <a href="#prompts" class="nav-item">Copilot Prompts</a>
+        <a href="#terminal-game" class="nav-item highlight-link">Play Adventure</a>
+        <a href="#contact" class="nav-item">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="status-indicator" title="Current Status">
+          <span class="status-pulse"></span>
+          <span class="status-text">Available for Hackathons</span>
+        </div>
+        <button class="btn-primary-sm" id="btn-quick-play" onclick="scrollToSection('terminal-game')">
+          Launch Game
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section" id="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-icon">⚡</span>
+          <span>Crafted with GitHub Copilot AI Assistance</span>
+        </div>
+        <h1 class="hero-title">
+          Hi, I'm <span class="text-gradient">Vinit Chaurasia</span><br>
+          <span class="typing-container">
+            <span id="typing-text"></span><span class="cursor">|</span>
+          </span>
+        </h1>
+        <p class="hero-description">
+          Specializing in autonomous agent architectures, full-stack reactive applications, and AI-assisted engineering workflows. Turning complex distributed system challenges into elegant, bulletproof software.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#terminal-game" class="btn btn-primary" id="cta-play-game">
+            <span class="btn-icon">🎮</span> Play CYOA Game
+          </a>
+          <a href="#prompts" class="btn btn-secondary" id="cta-view-prompts">
+            <span class="btn-icon">💡</span> Explore Copilot Prompts
+          </a>
+          <a href="https://github.com/chourasiavinit9-dev" target="_blank" rel="noopener noreferrer" class="btn btn-glass" id="cta-github">
+            <span class="btn-icon">🐙</span> GitHub Profile
+          </a>
+        </div>
+
+        <div class="hero-stats-grid">
+          <div class="stat-card">
+            <span class="stat-number">10+</span>
+            <span class="stat-label">MLH Hackathons</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">25+</span>
+            <span class="stat-label">Shipped Repositories</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">CI/CD Verified</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">10x</span>
+            <span class="stat-label">Copilot Acceleration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="avatar-frame">
+          <div class="avatar-glow-ring"></div>
+          <img src="assets/avatar.jpg" alt="Vinit Chaurasia - AI Developer Avatar" class="hero-avatar" id="hero-avatar">
+          <div class="avatar-floating-tag tag-ai">
+            <span class="tag-dot"></span> Copilot Pro
+          </div>
+          <div class="avatar-floating-tag tag-status">
+            <span class="tag-icon">⚡</span> Full-Stack AI
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section" id="about">
+      <div class="section-header">
+        <span class="section-tag">ENGINEERING PHILOSOPHY</span>
+        <h2 class="section-title">Augmented Intelligence at the Speed of Thought</h2>
+        <p class="section-subtitle">How pairing with GitHub Copilot transforms software development from syntax wrestling into high-leverage architectural orchestration.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="glass-card about-card">
+          <div class="card-icon-wrapper">
+            <span class="card-icon">🧠</span>
+          </div>
+          <h3 class="card-title">Prompt-First Architecture</h3>
+          <p class="card-text">
+            Designing systems through structured reasoning, rigorous interfaces, and clear architectural constraints before generating production-grade implementations.
+          </p>
+        </div>
+
+        <div class="glass-card about-card">
+          <div class="card-icon-wrapper">
+            <span class="card-icon">⚡</span>
+          </div>
+          <h3 class="card-title">Rapid Prototyping</h3>
+          <p class="card-text">
+            Accelerating the build loop from idea to verified product in under 60 minutes, backed by comprehensive automated test suites and strict typing.
+          </p>
+        </div>
+
+        <div class="glass-card about-card">
+          <div class="card-icon-wrapper">
+            <span class="card-icon">🛡️</span>
+          </div>
+          <h3 class="card-title">Automated Verification</h3>
+          <p class="card-text">
+            Pairing LLM generation with deterministic linters, branch protection rulesets, and Pytest suites to ensure every generated artifact is robust and secure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills-section" id="skills">
+      <div class="section-header">
+        <span class="section-tag">TECH STACK & COMPETENCIES</span>
+        <h2 class="section-title">Modern Tools for Modern Builders</h2>
+      </div>
+
+      <div class="skills-filter" id="skills-filter">
+        <button class="filter-btn active" data-filter="all">All Tech</button>
+        <button class="filter-btn" data-filter="ai">AI & Copilot</button>
+        <button class="filter-btn" data-filter="web">Web & Frontend</button>
+        <button class="filter-btn" data-filter="backend">Backend & Data</button>
+        <button class="filter-btn" data-filter="devops">DevOps & Tooling</button>
+      </div>
+
+      <div class="skills-grid" id="skills-grid">
+        <div class="skill-card" data-category="ai">
+          <div class="skill-header">
+            <span class="skill-name">GitHub Copilot</span>
+            <span class="skill-level">Expert</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 95%;"></div></div>
+          <span class="skill-detail">Copilot Chat, CLI, Agent Mode & PR Summaries</span>
+        </div>
+
+        <div class="skill-card" data-category="ai">
+          <div class="skill-header">
+            <span class="skill-name">Python & Pytest</span>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 92%;"></div></div>
+          <span class="skill-detail">AsyncIO, OOP State Machines, Test-Driven Dev</span>
+        </div>
+
+        <div class="skill-card" data-category="web">
+          <div class="skill-header">
+            <span class="skill-name">Vanilla HTML5 / Modern CSS3</span>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 90%;"></div></div>
+          <span class="skill-detail">Custom Design Tokens, Glassmorphism, Animations</span>
+        </div>
+
+        <div class="skill-card" data-category="web">
+          <div class="skill-header">
+            <span class="skill-name">Modern JavaScript (ESNext)</span>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 88%;"></div></div>
+          <span class="skill-detail">DOM Engines, Web APIs, Client-Side Validation</span>
+        </div>
+
+        <div class="skill-card" data-category="backend">
+          <div class="skill-header">
+            <span class="skill-name">RESTful APIs & Microservices</span>
+            <span class="skill-level">Proficient</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 85%;"></div></div>
+          <span class="skill-detail">Flask, FastAPI, JSON Schemas, Webhooks</span>
+        </div>
+
+        <div class="skill-card" data-category="devops">
+          <div class="skill-header">
+            <span class="skill-name">GitHub Actions & Git Ops</span>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" style="width: 90%;"></div></div>
+          <span class="skill-detail">Branch Rulesets, CI Test Runners, Dependabot</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section projects-section" id="projects">
+      <div class="section-header">
+        <span class="section-tag">PORTFOLIO HIGHLIGHTS</span>
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-subtitle">A showcase of production systems, interactive games, and developer toolkits.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <article class="glass-card project-card featured-project">
+          <div class="project-media">
+            <img src="assets/cyber_matrix.jpg" alt="Cyber Matrix AI Core Interface" class="project-image">
+            <div class="project-overlay">
+              <button class="btn btn-sm btn-primary" onclick="scrollToSection('terminal-game')">Play In Browser</button>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="badge-tag">Python 3</span>
+              <span class="badge-tag">Pytest</span>
+              <span class="badge-tag">Copilot Prompts</span>
+              <span class="badge-tag">CLI & Web</span>
+            </div>
+            <h3 class="project-title">The Hacker's Heist: Breach of the AI Core</h3>
+            <p class="project-desc">
+              A comprehensive "Choose Your Own Adventure" state-machine game featuring real-time damage mechanics, inventory system, stealth scores, 5 distinct endings, and 100% Pytest test coverage.
+            </p>
+            <div class="project-footer">
+              <a href="#terminal-game" class="card-link">Play Interactive Version &rarr;</a>
+              <span class="project-stat">6 Unit Tests Passing</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="glass-card project-card">
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="badge-tag">Flask</span>
+              <span class="badge-tag">GitHub Skills</span>
+              <span class="badge-tag">CI/CD</span>
+            </div>
+            <h3 class="project-title">Mergington Extracurricular Portal</h3>
+            <p class="project-desc">
+              High school activities management platform built during GitHub Copilot skills training with dynamic participant rosters, unregister endpoints, and defensive duplicate validation.
+            </p>
+            <div class="project-footer">
+              <a href="https://github.com/chourasiavinit9-dev/getting-started-with-github-copilot" target="_blank" rel="noopener noreferrer" class="card-link">GitHub Repository &rarr;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="glass-card project-card">
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="badge-tag">GitHub Rulesets</span>
+              <span class="badge-tag">Security</span>
+              <span class="badge-tag">Dependabot</span>
+            </div>
+            <h3 class="project-title">Enterprise Repository Governance</h3>
+            <p class="project-desc">
+              Multi-tiered repository protection architecture incorporating branch rulesets, automated vulnerability triage, issue templates, and strict CODEOWNERS approval workflows.
+            </p>
+            <div class="project-footer">
+              <a href="https://github.com/chourasiavinit9-dev/introduction-to-repository-management" target="_blank" rel="noopener noreferrer" class="card-link">GitHub Repository &rarr;</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Copilot Prompt Vault Section -->
+    <section class="section prompts-section" id="prompts">
+      <div class="section-header">
+        <span class="section-tag">COPILOT QUICKSTART GUIDE</span>
+        <h2 class="section-title">Copilot Prompt Vault</h2>
+        <p class="section-subtitle">Real-world GitHub Copilot prompts used to scaffold, code, and test this project. Click any prompt to copy it to your clipboard!</p>
+      </div>
+
+      <div class="prompts-grid">
+        <div class="prompt-card glass-card">
+          <div class="prompt-header">
+            <span class="prompt-category">🎨 Scaffolding & UI Design</span>
+            <button class="copy-btn" onclick="copyPrompt(this, 'prompt-1')">Copy Prompt</button>
+          </div>
+          <h3 class="prompt-title">Modern Glassmorphic Portfolio Architecture</h3>
+          <pre class="prompt-code" id="prompt-1"><code>Act as a senior front-end design technologist.
+Scaffold a responsive modern developer portfolio using semantic HTML5 and vanilla CSS.
+Include:
+- A dark futuristic aesthetic (#0a0c14 base, glowing cyan/purple mesh gradients)
+- Glassmorphism cards with backdrop-filter blur
+- Hero section with dynamic typing effect and custom developer avatar
+- Project showcase with tags, live links, and interactive filter controls
+- Fully accessible semantic structure and unique element IDs.</code></pre>
+        </div>
+
+        <div class="prompt-card glass-card">
+          <div class="prompt-header">
+            <span class="prompt-category">⚙️ Game Logic & State Machine</span>
+            <button class="copy-btn" onclick="copyPrompt(this, 'prompt-2')">Copy Prompt</button>
+          </div>
+          <h3 class="prompt-title">Branching CYOA Game Engine</h3>
+          <pre class="prompt-code" id="prompt-2"><code>Write a Python command-line Choose Your Own Adventure game called 'The Hacker's Heist'.
+Requirements:
+1. Implement a Player class tracking HP, stealth percentage, credits, and inventory list.
+2. Structure story nodes in a graph with choices that lead to different nodes.
+3. Include dynamic actions that modify player state (damage, healing, items gained).
+4. Implement at least 4 distinct endings (Architect, Ghost, Mercenary, Meltdown) and a game_over state when HP reaches 0.
+5. Provide a mock_inputs hook in play_game() for automated headless unit testing.</code></pre>
+        </div>
+
+        <div class="prompt-card glass-card">
+          <div class="prompt-header">
+            <span class="prompt-category">🧪 Test-Driven Engineering</span>
+            <button class="copy-btn" onclick="copyPrompt(this, 'prompt-3')">Copy Prompt</button>
+          </div>
+          <h3 class="prompt-title">Comprehensive Pytest Verification Suite</h3>
+          <pre class="prompt-code" id="prompt-3"><code>Write a complete Pytest test suite for our Choose Your Own Adventure game.
+Follow the Arrange-Act-Assert (AAA) pattern to test:
+- Initial player attributes and inventory initialization
+- Take damage and heal boundary limits (capped at 100, floored at 0)
+- Duplicate item prevention and item removal checks
+- Story graph integrity (verify every option target exists in the story graph)
+- Full branch simulation reaching the 'ending_architect' victory
+- Full branch simulation triggering a 'game_over' health depletion.</code></pre>
+        </div>
+
+        <div class="prompt-card glass-card">
+          <div class="prompt-header">
+            <span class="prompt-category">🚀 Form Handling & Interactivity</span>
+            <button class="copy-btn" onclick="copyPrompt(this, 'prompt-4')">Copy Prompt</button>
+          </div>
+          <h3 class="prompt-title">Zero-Dependency Interactive Terminal</h3>
+          <pre class="prompt-code" id="prompt-4"><code>Create a simulated interactive hacker terminal in vanilla JavaScript.
+Features:
+- Commands: 'help', 'start', 'choose [1-3]', 'inventory', 'stats', 'clear', 'restart'
+- Mirror the story nodes and inventory logic of the Python CYOA game
+- Render colored ANSI-style text into a retro terminal display
+- Provide auto-scrolling terminal output and instant keyboard command parsing.</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive In-Browser CYOA Terminal Game Section -->
+    <section class="section terminal-section" id="terminal-game">
+      <div class="section-header">
+        <span class="section-tag">PLAYABLE DEMO</span>
+        <h2 class="section-title">The Hacker's Heist: Web Terminal</h2>
+        <p class="section-subtitle">Experience the "Choose Your Own Adventure" game live in your browser or run <code>python3 adventure_game.py</code> in your local CLI!</p>
+      </div>
+
+      <div class="terminal-container">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+          <div class="terminal-controls">
+            <span class="control-dot close-dot"></span>
+            <span class="control-dot minimize-dot"></span>
+            <span class="control-dot maximize-dot"></span>
+          </div>
+          <div class="terminal-title">bash — cipher@omni-corp-subnet: ~ (CYOA Engine v1.0)</div>
+          <div class="terminal-actions">
+            <button class="terminal-action-btn" id="btn-restart-game" onclick="restartGame()">Restart</button>
+            <button class="terminal-action-btn" id="btn-clear-term" onclick="clearTerminal()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Terminal Output Window -->
+        <div class="terminal-body" id="terminal-output" tabindex="0" role="region" aria-label="Terminal Game Output">
+          <!-- Game text output will be dynamically injected here -->
+        </div>
+
+        <!-- Terminal Input Bar -->
+        <div class="terminal-input-bar">
+          <span class="terminal-prompt">cipher@matrix:~$</span>
+          <input type="text" id="terminal-input" class="terminal-input-field" placeholder="Type choice number (e.g. 1, 2, 3) or command ('help', 'stats')..." autocomplete="off" autofocus>
+          <button class="terminal-send-btn" id="btn-terminal-send" onclick="handleTerminalSubmit()">Send</button>
+        </div>
+      </div>
+
+      <div class="terminal-tips">
+        <span class="tip-badge">💡 Tip:</span> You can type <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> to make decisions, or commands like <code>stats</code>, <code>inventory</code>, <code>help</code>, or <code>restart</code>.
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section" id="contact">
+      <div class="section-header">
+        <span class="section-tag">GET IN TOUCH</span>
+        <h2 class="section-title">Let's Build Something Extraordinary</h2>
+        <p class="section-subtitle">Interested in collaborating on hackathons, AI agent architectures, or full-stack software?</p>
+      </div>
+
+      <div class="contact-card glass-card">
+        <form class="contact-form" id="contact-form" onsubmit="handleContactSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-name">Your Name</label>
+              <input type="text" id="contact-name" name="name" class="form-control" placeholder="Alex Rivers" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" name="email" class="form-control" placeholder="alex@domain.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" name="subject" class="form-control" placeholder="Hackathon Project / AI Collaboration" required>
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" class="form-control" rows="4" placeholder="Let's build an autonomous agent system..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="btn-submit-contact">
+            Send Message 🚀
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-logo"><span class="logo-accent">VC</span><span class="logo-dot">.</span>dev</span>
+        <p class="footer-text">Built by Vinit Chaurasia for Major League Hacking & Global Hack Week.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/chourasiavinit9-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://dev.to" target="_blank" rel="noopener noreferrer">DEV.to</a>
+        <a href="https://hacktoberfest.com" target="_blank" rel="noopener noreferrer">Hacktoberfest 2026</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Vinit Chaurasia. Designed with GitHub Copilot AI Assistance. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
