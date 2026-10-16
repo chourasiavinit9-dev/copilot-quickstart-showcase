@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tiger Cloud TimescaleDB Hypertable Verification</title>
+  <title>Tiger Cloud TimescaleDB: Hypertables & Continuous Aggregates (CAGGs)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +15,7 @@
       --accent-tiger: #f7a01d;
       --accent-cyan: #00f2fe;
       --accent-green: #10b981;
+      --accent-purple: #c084fc;
       --text-main: #f8fafc;
       --text-dim: #94a3b8;
       --font-main: 'Outfit', sans-serif;
@@ -33,7 +34,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
     }
 
@@ -101,16 +102,21 @@
       border-radius: 16px;
       padding: 1.5rem;
       backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       color: var(--accent-tiger);
+    }
+
+    .card-title-cagg {
+      color: var(--accent-cyan);
     }
 
     .prop-row {
@@ -134,6 +140,7 @@
       color: #38bdf8;
       overflow-x: auto;
       margin-bottom: 1rem;
+      white-space: pre-wrap;
     }
 
     table {
@@ -166,8 +173,28 @@
       font-size: 0.8rem;
     }
 
+    .tag-cagg {
+      background: rgba(0, 242, 254, 0.15);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--accent-cyan);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
     .tag-temp { color: #f87171; font-weight: 600; }
     .tag-humidity { color: #60a5fa; font-weight: 600; }
+
+    .perf-badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--accent-green);
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
@@ -177,7 +204,7 @@
       <div class="header-title">
         <span class="logo-badge">TIGER CLOUD</span>
         <div>
-          <h1>TimescaleDB Hypertable Verified</h1>
+          <h1>TimescaleDB: Hypertables & Continuous Aggregates (CAGGs)</h1>
           <p style="color: var(--text-dim); font-size: 0.9rem;">Global Hack Week MLH Sponsor Challenge · GHW Hacktoberfest</p>
         </div>
       </div>
@@ -186,7 +213,7 @@
       </div>
     </header>
 
-    <!-- Top Grid -->
+    <!-- Top Grid: Service Specs & CAGG Overview -->
     <div class="grid-2">
       <!-- Service Specs -->
       <div class="card">
@@ -195,35 +222,183 @@
         <div class="prop-row"><span class="prop-label">Service Name:</span><span class="prop-val">hypertable-service</span></div>
         <div class="prop-row"><span class="prop-label">Service Type:</span><span class="prop-val">TIMESCALEDB (PostgreSQL 16)</span></div>
         <div class="prop-row"><span class="prop-label">Region:</span><span class="prop-val">AWS us-east-1 (N. Virginia)</span></div>
-        <div class="prop-row"><span class="prop-label">Environment:</span><span class="prop-val">DEV</span></div>
         <div class="prop-row"><span class="prop-label">Compute Allocation:</span><span class="prop-val">0.5 CPU / 2 GB RAM</span></div>
         <div class="prop-row"><span class="prop-label">Direct Endpoint:</span><span class="prop-val" style="color: var(--accent-cyan); font-size: 0.8rem;">hjfmkt7b31.wqu8h8zmst.tsdb.cloud.timescale.com:38323</span></div>
         <div class="prop-row"><span class="prop-label">Console URL:</span><span class="prop-val"><a href="https://console.cloud.tigerdata.com/dashboard/services/hjfmkt7b31" target="_blank" style="color: var(--accent-tiger); text-decoration: none;">View in Tiger Console &rarr;</a></span></div>
       </div>
 
-      <!-- Hypertable Config -->
+      <!-- Continuous Aggregate Spec -->
       <div class="card">
-        <h2 class="card-title">📊 Hypertable Schema & Partitioning</h2>
-        <div class="code-box">CREATE TABLE conditions (
-   time        TIMESTAMPTZ       NOT NULL,
-   location    TEXT              NOT NULL,
-   device      TEXT              NOT NULL,
-   temperature DOUBLE PRECISION  NULL,
-   humidity    DOUBLE PRECISION  NULL
-) WITH (
-   tsdb.hypertable,
-   tsdb.segmentby = 'device',
-   tsdb.orderby = 'time DESC'
-);</div>
-        <div class="prop-row"><span class="prop-label">Partition Column:</span><span class="prop-val">time (TIMESTAMPTZ)</span></div>
-        <div class="prop-row"><span class="prop-label">Segment By:</span><span class="prop-val">device</span></div>
-        <div class="prop-row"><span class="prop-label">Compression Policy:</span><span class="prop-val" style="color: var(--accent-green);">Enabled (Columnstore)</span></div>
+        <h2 class="card-title card-title-cagg">⚡ Continuous Aggregate (CAGG) Architecture</h2>
+        <div class="code-box">CREATE MATERIALIZED VIEW conditions_summary_hourly
+WITH (timescaledb.continuous) AS
+SELECT device, location,
+   time_bucket(INTERVAL '1 hour', time) AS bucket,
+   COUNT(*) AS reading_count,
+   AVG(temperature) AS avg_temperature,
+   MAX(temperature) AS max_temperature,
+   MIN(temperature) AS min_temperature,
+   AVG(humidity) AS avg_humidity
+FROM conditions
+GROUP BY device, location, bucket;</div>
+        <div class="prop-row"><span class="prop-label">CAGG View:</span><span class="prop-val">conditions_summary_hourly</span></div>
+        <div class="prop-row"><span class="prop-label">Internal Hypertable:</span><span class="prop-val">_materialized_hypertable_2</span></div>
+        <div class="prop-row"><span class="prop-label">Real-Time Aggregations:</span><span class="prop-val" style="color: var(--accent-green);">Enabled (materialized_only = false)</span></div>
+        <div class="prop-row"><span class="prop-label">Background Refresh Job:</span><span class="prop-val">Job #1002 (Every 15 mins)</span></div>
       </div>
     </div>
 
-    <!-- Chunks Breakdown -->
+    <!-- CAGG Query Results Table -->
     <div class="card" style="margin-bottom: 1.5rem;">
-      <h2 class="card-title">🗂️ Auto-Partitioned Storage Chunks (timescaledb_information.chunks)</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 class="card-title card-title-cagg">🚀 Real-Time Materialized Continuous Aggregate Output</h2>
+        <span class="perf-badge">⚡ Pre-computed Background Cache</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Location</th>
+            <th>Hourly Bucket (UTC)</th>
+            <th>Count</th>
+            <th>Avg Temp</th>
+            <th>Max Temp</th>
+            <th>Min Temp</th>
+            <th>Avg Humidity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-cagg">sensor-1</span></td>
+            <td>office</td>
+            <td>2026-10-16 16:00:00+00</td>
+            <td>1</td>
+            <td class="tag-temp">22.20°C</td>
+            <td class="tag-temp">22.20°C</td>
+            <td class="tag-temp">22.20°C</td>
+            <td class="tag-humidity">45.10%</td>
+          </tr>
+          <tr>
+            <td><span class="tag-cagg">sensor-3</span></td>
+            <td>warehouse</td>
+            <td>2026-10-16 16:00:00+00</td>
+            <td>1</td>
+            <td class="tag-temp">25.40°C</td>
+            <td class="tag-temp">25.40°C</td>
+            <td class="tag-temp">25.40°C</td>
+            <td class="tag-humidity">52.00%</td>
+          </tr>
+          <tr>
+            <td><span class="tag-cagg">sensor-1</span></td>
+            <td>office</td>
+            <td>2026-10-16 15:00:00+00</td>
+            <td>1</td>
+            <td class="tag-temp">22.30°C</td>
+            <td class="tag-temp">22.30°C</td>
+            <td class="tag-temp">22.30°C</td>
+            <td class="tag-humidity">44.80%</td>
+          </tr>
+          <tr>
+            <td><span class="tag-cagg">sensor-2</span></td>
+            <td>datacenter</td>
+            <td>2026-10-16 15:00:00+00</td>
+            <td>1</td>
+            <td class="tag-temp">19.50°C</td>
+            <td class="tag-temp">19.50°C</td>
+            <td class="tag-temp">19.50°C</td>
+            <td class="tag-humidity">38.20%</td>
+          </tr>
+          <tr>
+            <td><span class="tag-cagg">sensor-1</span></td>
+            <td>office</td>
+            <td>2026-10-16 14:00:00+00</td>
+            <td>1</td>
+            <td class="tag-temp">22.10°C</td>
+            <td class="tag-temp">22.10°C</td>
+            <td class="tag-temp">22.10°C</td>
+            <td class="tag-humidity">45.00%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 15-Minute Hyperfunction Time-Bucketing -->
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h2 class="card-title">⏱️ Fine-Grained 15-Minute Time-Bucket Aggregations (time_bucket('15 min', time))</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Time Bucket (15 min)</th>
+            <th>Device</th>
+            <th>Location</th>
+            <th>Total Readings</th>
+            <th>Avg Temperature</th>
+            <th>Min Temperature</th>
+            <th>Max Temperature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-10-16 16:30:00+00</td>
+            <td>sensor-2</td>
+            <td>datacenter</td>
+            <td>1</td>
+            <td class="tag-temp">19.80°C</td>
+            <td class="tag-temp">19.80°C</td>
+            <td class="tag-temp">19.80°C</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:15:00+00</td>
+            <td>sensor-1</td>
+            <td>office</td>
+            <td>3</td>
+            <td class="tag-temp">22.67°C</td>
+            <td class="tag-temp">22.20°C</td>
+            <td class="tag-temp">23.00°C</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:00:00+00</td>
+            <td>sensor-3</td>
+            <td>warehouse</td>
+            <td>1</td>
+            <td class="tag-temp">25.40°C</td>
+            <td class="tag-temp">25.40°C</td>
+            <td class="tag-temp">25.40°C</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 15:45:00+00</td>
+            <td>sensor-2</td>
+            <td>datacenter</td>
+            <td>1</td>
+            <td class="tag-temp">19.50°C</td>
+            <td class="tag-temp">19.50°C</td>
+            <td class="tag-temp">19.50°C</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 15:15:00+00</td>
+            <td>sensor-1</td>
+            <td>office</td>
+            <td>1</td>
+            <td class="tag-temp">22.30°C</td>
+            <td class="tag-temp">22.30°C</td>
+            <td class="tag-temp">22.30°C</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 14:15:00+00</td>
+            <td>sensor-1</td>
+            <td>office</td>
+            <td>1</td>
+            <td class="tag-temp">22.10°C</td>
+            <td class="tag-temp">22.10°C</td>
+            <td class="tag-temp">22.10°C</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Underlying Hypertable Storage & Chunks -->
+    <div class="card">
+      <h2 class="card-title">🗂️ Underlying Hypertable Storage Chunks (_hyper_1_1_chunk)</h2>
       <table>
         <thead>
           <tr>
@@ -241,112 +416,6 @@
             <td>2026-10-22 00:00:00+00</td>
             <td>7 Days (Auto-Tuned)</td>
             <td><span style="color: var(--accent-cyan);">Active Ingest (Uncompressed)</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Live Data Rows -->
-    <div class="card" style="margin-bottom: 1.5rem;">
-      <h2 class="card-title">📈 Inserted Time-Series Data (SELECT * FROM conditions ORDER BY time DESC)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Timestamp (time)</th>
-            <th>Location</th>
-            <th>Device</th>
-            <th>Temperature (°C)</th>
-            <th>Humidity (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2026-10-16 16:18:15 UTC</td>
-            <td>office</td>
-            <td>sensor-1</td>
-            <td class="tag-temp">22.2°C</td>
-            <td class="tag-humidity">45.1%</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 16:03:15 UTC</td>
-            <td>warehouse</td>
-            <td>sensor-3</td>
-            <td class="tag-temp">25.4°C</td>
-            <td class="tag-humidity">52.0%</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 15:48:15 UTC</td>
-            <td>datacenter</td>
-            <td>sensor-2</td>
-            <td class="tag-temp">19.5°C</td>
-            <td class="tag-humidity">38.2%</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 15:18:15 UTC</td>
-            <td>office</td>
-            <td>sensor-1</td>
-            <td class="tag-temp">22.3°C</td>
-            <td class="tag-humidity">44.8%</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 14:18:15 UTC</td>
-            <td>office</td>
-            <td>sensor-1</td>
-            <td class="tag-temp">22.1°C</td>
-            <td class="tag-humidity">45.0%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Analytical Query Results -->
-    <div class="card">
-      <h2 class="card-title">🔍 Analytical Aggregations (time_bucket('1 hour', time))</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Hour Bucket</th>
-            <th>Location</th>
-            <th>Avg Temperature</th>
-            <th>Avg Humidity</th>
-            <th>Readings Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2026-10-16 16:00:00+00</td>
-            <td>office</td>
-            <td class="tag-temp">22.20°C</td>
-            <td class="tag-humidity">45.10%</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 16:00:00+00</td>
-            <td>warehouse</td>
-            <td class="tag-temp">25.40°C</td>
-            <td class="tag-humidity">52.00%</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 15:00:00+00</td>
-            <td>datacenter</td>
-            <td class="tag-temp">19.50°C</td>
-            <td class="tag-humidity">38.20%</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 15:00:00+00</td>
-            <td>office</td>
-            <td class="tag-temp">22.30°C</td>
-            <td class="tag-humidity">44.80%</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>2026-10-16 14:00:00+00</td>
-            <td>office</td>
-            <td class="tag-temp">22.10°C</td>
-            <td class="tag-humidity">45.00%</td>
-            <td>1</td>
           </tr>
         </tbody>
       </table>
