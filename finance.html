@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiger Cloud: Real-Time Financial Market Ingestion & CAGGs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(15, 20, 35, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent-tiger: #f7a01d;
+      --accent-cyan: #00f2fe;
+      --accent-green: #10b981;
+      --accent-purple: #c084fc;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      padding: 2.5rem;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--accent-tiger), #ea580c);
+      color: #000;
+      font-weight: 800;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      letter-spacing: -0.5px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .service-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--accent-green);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulseAnim 2s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .ticker-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .ticker-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .ticker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .ticker-symbol {
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--accent-cyan);
+    }
+
+    .ticker-tag {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      color: var(--text-dim);
+    }
+
+    .ticker-price {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .ticker-sub {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-tiger);
+    }
+
+    .card-title-cyan { color: var(--accent-cyan); }
+
+    .prop-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.9rem;
+    }
+
+    .prop-label { color: var(--text-dim); }
+    .prop-val { font-family: var(--font-mono); color: #fff; font-weight: 500; }
+
+    .code-box {
+      background: #05070c;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--accent-cyan);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .tag-crypto {
+      background: rgba(0, 242, 254, 0.15);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--accent-cyan);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .tag-green { color: var(--accent-green); font-weight: 600; }
+    .tag-yellow { color: #f59e0b; font-weight: 600; }
+
+    .term-box {
+      background: #04060a;
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #38bdf8;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title">
+        <span class="logo-badge">TIGER CLOUD</span>
+        <div>
+          <h1>Real-Time Financial Ingestion & Candlesticks (CAGGs)</h1>
+          <p style="color: var(--text-dim); font-size: 0.9rem;">Global Hack Week MLH Sponsor Challenge · High-Frequency Market Ticks</p>
+        </div>
+      </div>
+      <div class="service-badge">
+        <span class="pulse"></span> Live WebSocket Pipeline Streaming
+      </div>
+    </header>
+
+    <!-- Top Live Tickers -->
+    <div class="ticker-cards">
+      <div class="ticker-card">
+        <div class="ticker-header">
+          <span class="ticker-symbol">BTC/USD</span>
+          <span class="ticker-tag">Bitcoin Real-Time</span>
+        </div>
+        <div class="ticker-price">$81,455.90</div>
+        <div class="ticker-sub">
+          <span>Bid: $81,439.60</span>
+          <span>Ask: $81,472.19</span>
+        </div>
+      </div>
+
+      <div class="ticker-card">
+        <div class="ticker-header">
+          <span class="ticker-symbol">ETH/USD</span>
+          <span class="ticker-tag">Ethereum Real-Time</span>
+        </div>
+        <div class="ticker-price">$2,436.42</div>
+        <div class="ticker-sub">
+          <span>Bid: $2,435.93</span>
+          <span>Ask: $2,436.91</span>
+        </div>
+      </div>
+
+      <div class="ticker-card">
+        <div class="ticker-header">
+          <span class="ticker-symbol">SOL/USD</span>
+          <span class="ticker-tag">Solana Real-Time</span>
+        </div>
+        <div class="ticker-price">$104.39</div>
+        <div class="ticker-sub">
+          <span>Bid: $104.36</span>
+          <span>Ask: $104.41</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid 2: Pipeline Specs & Hypertable Architecture -->
+    <div class="grid-2">
+      <div class="card">
+        <h2 class="card-title">⚡ Financial Hypertable Specs</h2>
+        <div class="prop-row"><span class="prop-label">Service Instance:</span><span class="prop-val">hjfmkt7b31 (TimescaleDB)</span></div>
+        <div class="prop-row"><span class="prop-label">Hypertable:</span><span class="prop-val">public.crypto_ticks</span></div>
+        <div class="prop-row"><span class="prop-label">Partition Column:</span><span class="prop-val">time (TIMESTAMPTZ)</span></div>
+        <div class="prop-row"><span class="prop-label">Segment Key:</span><span class="prop-val">symbol</span></div>
+        <div class="prop-row"><span class="prop-label">Order By:</span><span class="prop-val">time DESC</span></div>
+        <div class="prop-row"><span class="prop-label">Direct Endpoint:</span><span class="prop-val" style="color: var(--accent-cyan); font-size: 0.8rem;">hjfmkt7b31.wqu8h8zmst.tsdb.cloud.timescale.com:38323</span></div>
+        <div class="prop-row"><span class="prop-label">Console:</span><span class="prop-val"><a href="https://console.cloud.tigerdata.com/dashboard/services/hjfmkt7b31" target="_blank" style="color: var(--accent-tiger); text-decoration: none;">Tiger Cloud Console &rarr;</a></span></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title card-title-cyan">📊 1-Minute OHLCV Candlestick CAGG</h2>
+        <div class="code-box">CREATE MATERIALIZED VIEW crypto_candlesticks_1m
+WITH (timescaledb.continuous) AS
+SELECT symbol,
+   time_bucket('1 minute', time) AS bucket,
+   FIRST(price, time) AS open,
+   MAX(price) AS high,
+   MIN(price) AS low,
+   LAST(price, time) AS close,
+   AVG(price) AS vwap,
+   SUM(day_volume) AS total_volume,
+   COUNT(*) AS tick_count
+FROM crypto_ticks
+GROUP BY symbol, bucket;</div>
+        <div class="prop-row"><span class="prop-label">CAGG Materialization:</span><span class="prop-val">_materialized_hypertable_3</span></div>
+        <div class="prop-row"><span class="prop-label">Refresh Policy:</span><span class="prop-val">Job #1004 (Every 1 min)</span></div>
+      </div>
+    </div>
+
+    <!-- Live Ingested Ticks Table -->
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h2 class="card-title">📈 Real-Time Ingested Ticks (SELECT * FROM crypto_ticks ORDER BY time DESC)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp (time UTC)</th>
+            <th>Symbol</th>
+            <th>Market Price (USD)</th>
+            <th>Bid</th>
+            <th>Ask</th>
+            <th>Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-10-16 16:38:31 UTC</td>
+            <td><span class="tag-crypto">SOL/USD</span></td>
+            <td class="tag-green">$104.39</td>
+            <td>$104.36</td>
+            <td>$104.41</td>
+            <td>15.66</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:38:30 UTC</td>
+            <td><span class="tag-crypto">ETH/USD</span></td>
+            <td class="tag-green">$2,436.42</td>
+            <td>$2,435.93</td>
+            <td>$2,436.91</td>
+            <td>365.46</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:38:25 UTC</td>
+            <td><span class="tag-crypto">BTC/USD</span></td>
+            <td class="tag-green">$81,455.90</td>
+            <td>$81,439.60</td>
+            <td>$81,472.19</td>
+            <td>12,218.38</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:38:21 UTC</td>
+            <td><span class="tag-crypto">SOL/USD</span></td>
+            <td class="tag-green">$104.39</td>
+            <td>$104.36</td>
+            <td>$104.41</td>
+            <td>15.66</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:38:20 UTC</td>
+            <td><span class="tag-crypto">ETH/USD</span></td>
+            <td class="tag-green">$2,436.42</td>
+            <td>$2,435.93</td>
+            <td>$2,436.91</td>
+            <td>365.46</td>
+          </tr>
+          <tr>
+            <td>2026-10-16 16:38:19 UTC</td>
+            <td><span class="tag-crypto">BTC/USD</span></td>
+            <td class="tag-green">$81,455.90</td>
+            <td>$81,439.60</td>
+            <td>$81,472.19</td>
+            <td>12,218.38</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Candlestick Aggregation Output -->
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h2 class="card-title card-title-cyan">🕯️ Pre-Computed 1-Minute Candlesticks (SELECT * FROM crypto_candlesticks_1m)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Bucket Window (1m)</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>VWAP</th>
+            <th>Volume</th>
+            <th>Ticks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-crypto">BTC/USD</span></td>
+            <td>2026-10-16 16:38:00+00</td>
+            <td class="tag-yellow">$81,455.90</td>
+            <td class="tag-green">$81,455.90</td>
+            <td>$81,455.90</td>
+            <td class="tag-green">$81,455.90</td>
+            <td>$81,455.90</td>
+            <td>36,655.15</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><span class="tag-crypto">ETH/USD</span></td>
+            <td>2026-10-16 16:38:00+00</td>
+            <td class="tag-yellow">$2,436.42</td>
+            <td class="tag-green">$2,436.42</td>
+            <td>$2,436.42</td>
+            <td class="tag-green">$2,436.42</td>
+            <td>$2,436.42</td>
+            <td>1,461.85</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td><span class="tag-crypto">SOL/USD</span></td>
+            <td>2026-10-16 16:38:00+00</td>
+            <td class="tag-yellow">$104.39</td>
+            <td class="tag-green">$104.39</td>
+            <td>$104.39</td>
+            <td class="tag-green">$104.39</td>
+            <td>$104.39</td>
+            <td>62.63</td>
+            <td>4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pipeline Terminal Logs -->
+    <div class="card">
+      <h2 class="card-title">🖥️ Active Pipeline Streaming Logs (ingest_financial_data.py)</h2>
+      <div class="term-box">
+[STREAM] 16:37:51 UTC | BTC/USD | Price: $  81455.90 | Bid: $  81439.60 | Ask: $  81472.19<br>
+[STREAM] 16:37:52 UTC | ETH/USD | Price: $   2436.42 | Bid: $   2435.93 | Ask: $   2436.91<br>
+[STREAM] 16:37:53 UTC | SOL/USD | Price: $    104.39 | Bid: $    104.36 | Ask: $    104.41<br>
+<span style="color: var(--accent-green);">[INGEST] Batch of 3 ticks writing to Tiger Cloud... ✓ INGESTED in 4236.2ms (Total: 3/15)</span><br>
+[STREAM] 16:38:08 UTC | BTC/USD | Price: $  81455.90 | Bid: $  81439.60 | Ask: $  81472.19<br>
+[STREAM] 16:38:09 UTC | ETH/USD | Price: $   2436.42 | Bid: $   2435.93 | Ask: $   2436.91<br>
+[STREAM] 16:38:14 UTC | SOL/USD | Price: $    104.39 | Bid: $    104.36 | Ask: $    104.41<br>
+<span style="color: var(--accent-green);">[INGEST] Batch of 3 ticks writing to Tiger Cloud... ✓ INGESTED in 4044.4ms (Total: 9/15)</span><br>
+[STREAM] 16:38:19 UTC | BTC/USD | Price: $  81455.90 | Bid: $  81439.60 | Ask: $  81472.19<br>
+[STREAM] 16:38:20 UTC | ETH/USD | Price: $   2436.42 | Bid: $   2435.93 | Ask: $   2436.91<br>
+[STREAM] 16:38:21 UTC | SOL/USD | Price: $    104.39 | Bid: $    104.36 | Ask: $    104.41<br>
+<span style="color: var(--accent-green);">[INGEST] Batch of 3 ticks writing to Tiger Cloud... ✓ INGESTED in 2781.5ms (Total: 12/15)</span><br>
+[STREAM] 16:38:25 UTC | BTC/USD | Price: $  81455.90 | Bid: $  81439.60 | Ask: $  81472.19<br>
+[STREAM] 16:38:30 UTC | ETH/USD | Price: $   2436.42 | Bid: $   2435.93 | Ask: $   2436.91<br>
+[STREAM] 16:38:31 UTC | SOL/USD | Price: $    104.39 | Bid: $    104.36 | Ask: $    104.41<br>
+<span style="color: var(--accent-green);">[INGEST] Batch of 3 ticks writing to Tiger Cloud... ✓ INGESTED in 2803.2ms (Total: 15/15)</span><br>
+<span style="color: var(--accent-cyan); font-weight: 700;">🎉 Pipeline run complete! Successfully ingested 15 real-time ticks into Tiger Cloud!</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
