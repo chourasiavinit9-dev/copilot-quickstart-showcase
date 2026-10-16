@@ -3,9 +3,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.9+](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Pytest: 100% Passed](https://img.shields.io/badge/Pytest-6%20Passed-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?logo=github)](https://chourasiavinit9-dev.github.io/copilot-quickstart-showcase/)
 [![GitHub Copilot](https://img.shields.io/badge/Pair%20Programmed%20With-GitHub%20Copilot-8A2BE2?logo=githubcopilot&logoColor=white)](https://github.com/features/copilot)
 
 A modern developer portfolio website and cyber-themed command-line "Choose Your Own Adventure" game created as part of the **[GitHub Copilot Quickstart Challenge](https://mlh.link/ghwHF1026-github-copilot-quickstart)**.
+
+🌐 **Live Website & Playable Web Terminal:** [https://chourasiavinit9-dev.github.io/copilot-quickstart-showcase/](https://chourasiavinit9-dev.github.io/copilot-quickstart-showcase/)
 
 ---
 
